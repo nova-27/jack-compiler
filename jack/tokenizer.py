@@ -46,7 +46,8 @@ class JackTokenizer:
 
         if self.buffer[0] == '"':
             self.token_type = TokenType.STRING_CONST
-            self.token_value = self._read_until('"')
+            self.buffer = self.buffer[1:]
+            self.token_value = self._read_until('"')[:-1]
             return
 
         pattern = f'[{re.escape("".join(SYMBOL))}\\s]'
