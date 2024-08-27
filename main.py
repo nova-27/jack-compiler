@@ -1,16 +1,39 @@
 from jack.tokenizer import JackTokenizer, TokenType
 from xml.sax.saxutils import escape
 import sys
+import os
 
 if __name__ == '__main__':
-    src = open(sys.argv[1], 'r')
-    tokenizer = JackTokenizer(src)
+    src_files = []
 
-    dst = open('out.xml', 'w')
-    dst.write('<tokens>\n')
-    while True:
-        tokenizer.advance()
-        if tokenizer.token_type == TokenType.EOF:
-            break
-        dst.write(f'<{tokenizer.token_type.value}> {escape(tokenizer.token_value)} </{tokenizer.token_type.value}>\n')
-    dst.write('</tokens>')
+    if len(sys.argv) < 2:
+        sys.exit('please specify source(s)')
+
+    if os.path.isfile(sys.argv[1]):
+        src_files.append(sys.argv[1])
+    elif os.path.isdir(sys.argv[1]):
+        for f in os.listdir(sys.argv[1]):
+            f_path = os.path.join(sys.argv[1], f)
+            if not os.path.isfile(f_path):
+                continue
+            if not f_path.endswith('.jack'):
+                continue
+            src_files.append(f_path)
+    else:
+        sys.exit('file/directory not found')
+
+    for src_file in src_files:
+        tokenizer = JackTokenizer(open(src_file, 'r'))
+
+        dst_file = src_file[:src_file.rfind('.')] + '.xml'
+        dst = open(dst_file, 'w')
+
+        dst.write('<tokens>\n')
+        while True:
+            tokenizer.advance()
+            if tokenizer.token_type == TokenType.EOF:
+                break
+            dst.write(
+                f'<{tokenizer.token_type.value}> {escape(tokenizer.token_value)} </{tokenizer.token_type.value}>\n'
+            )
+        dst.write('</tokens>')
