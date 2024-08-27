@@ -32,6 +32,7 @@ class JackTokenizer:
                 self.token_value = ''
                 return
 
+        # ignore comments
         for c in COMMENT:
             if not self.buffer.startswith(c[0]):
                 continue
@@ -50,6 +51,7 @@ class JackTokenizer:
             self.token_value = self._read_until('"')[:-1]
             return
 
+        # find token separator
         pattern = f'[{re.escape("".join(SYMBOL))}\\s]'
         while not (separator_match := re.search(pattern, self.buffer)):
             self.buffer += self.stream.read(CHUNK_SIZE)
@@ -67,7 +69,6 @@ class JackTokenizer:
             return
 
         self.token_type = TokenType.IDENTIFIER
-
 
     def _read_until(self, end: str):
         while (end_index := self.buffer.find(end)) == -1:
