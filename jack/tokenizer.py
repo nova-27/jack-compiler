@@ -5,6 +5,7 @@ from typing import TextIO
 CHUNK_SIZE = 1024
 SYMBOL = ('{', '}', '(', ')', '[', ']', '.', ',', ';', '+', '-', '*', '/', '&', '|', '<', '>', '=', '~')
 KEYWORD = ('class', 'constructor', 'function', 'method', 'field', 'static', 'var', 'int', 'char', 'boolean', 'void', 'true', 'false', 'null', 'this', 'let', 'do', 'if', 'else', 'while', 'return')
+COMMENT = (('//', '\n'), ('/*', '*/'))
 
 class TokenType(Enum):
     INITIAL = 'INITIAL'
@@ -30,6 +31,12 @@ class JackTokenizer:
                 self.token_type = TokenType.EOF
                 self.token_value = ''
                 return
+
+        for c in COMMENT:
+            if not self.buffer.startswith(c[0]):
+                continue
+            self._read_until(c[1])
+            return self.advance()
 
         if self.buffer[0] in SYMBOL:
             self.token_type = TokenType.SYMBOL
@@ -65,6 +72,6 @@ class JackTokenizer:
         while (end_index := self.buffer.find(end)) == -1:
             self.buffer += self.stream.read(CHUNK_SIZE)
 
-        result = self.buffer[:end_index + 1]
-        self.buffer = self.buffer[end_index + 1:].strip()
+        result = self.buffer[:end_index + len(end)]
+        self.buffer = self.buffer[end_index + len(end):].strip()
         return result
