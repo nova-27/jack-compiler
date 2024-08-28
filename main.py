@@ -1,5 +1,5 @@
-from jack.tokenizer import JackTokenizer, TokenType
-from xml.sax.saxutils import escape
+from jack.engine import CompilationEngine
+from jack.tokenizer import JackTokenizer
 import sys
 import os
 
@@ -28,12 +28,5 @@ if __name__ == '__main__':
         dst_file = src_file[:src_file.rfind('.')] + '.xml'
         dst = open(dst_file, 'w')
 
-        dst.write('<tokens>\n')
-        while True:
-            tokenizer.advance()
-            if tokenizer.token_type == TokenType.EOF:
-                break
-            dst.write(
-                f'<{tokenizer.token_type.value}> {escape(tokenizer.token_value)} </{tokenizer.token_type.value}>\n'
-            )
-        dst.write('</tokens>')
+        engine = CompilationEngine(tokenizer, dst)
+        engine.compile_class()
