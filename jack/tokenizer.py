@@ -72,6 +72,19 @@ class JackTokenizer:
 
         self.token_type = TokenType.IDENTIFIER
 
+    def look_ahead(self):
+        skipped_type = self.token_type
+        skipped_value = self.token_value
+
+        self.advance()
+        result = (self.token_type, self.token_value)
+
+        self.buffer = self.token_value + ' ' + self.buffer
+        self.token_type = skipped_type
+        self.token_value = skipped_value
+
+        return result
+
     def _read_until(self, end: str) -> str:
         while (end_index := self.buffer.find(end)) == -1:
             self.buffer += self.stream.read(CHUNK_SIZE)
