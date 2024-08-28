@@ -7,6 +7,7 @@ SYMBOL = ('{', '}', '(', ')', '[', ']', '.', ',', ';', '+', '-', '*', '/', '&', 
 KEYWORD = ('class', 'constructor', 'function', 'method', 'field', 'static', 'var', 'int', 'char', 'boolean', 'void', 'true', 'false', 'null', 'this', 'let', 'do', 'if', 'else', 'while', 'return')
 COMMENT = (('//', '\n'), ('/*', '*/'))
 
+
 class TokenType(Enum):
     INITIAL = 'INITIAL'
     SYMBOL = 'symbol'
@@ -15,6 +16,7 @@ class TokenType(Enum):
     INT_CONST = 'integerConstant'
     IDENTIFIER = 'identifier'
     EOF = 'EOF'
+
 
 class JackTokenizer:
     def __init__(self, stream: TextIO):
@@ -70,7 +72,7 @@ class JackTokenizer:
 
         self.token_type = TokenType.IDENTIFIER
 
-    def _read_until(self, end: str):
+    def _read_until(self, end: str) -> str:
         while (end_index := self.buffer.find(end)) == -1:
             self.buffer += self.stream.read(CHUNK_SIZE)
 
