@@ -42,7 +42,7 @@ class CompilationEngine:
 
         write_token_and_advance(self.tokenizer, self.out)
 
-        self._compie_type()
+        self._compile_type()
 
         check_type(self.tokenizer.token_type, TokenType.IDENTIFIER)
         write_token_and_advance(self.tokenizer, self.out)
@@ -60,7 +60,7 @@ class CompilationEngine:
 
         self.out.write('</classVarDec>\n')
 
-    def _compie_type(self):
+    def _compile_type(self):
         check_type(self.tokenizer.token_type, TokenType.KEYWORD, TokenType.IDENTIFIER)
 
         if self.tokenizer.token_type == TokenType.KEYWORD:
@@ -76,7 +76,7 @@ class CompilationEngine:
         if self.tokenizer.token_value == 'void':
             write_token_and_advance(self.tokenizer, self.out)
         else:
-            self._compie_type()
+            self._compile_type()
 
         check_type(self.tokenizer.token_type, TokenType.IDENTIFIER)
         write_token_and_advance(self.tokenizer, self.out)
@@ -97,7 +97,7 @@ class CompilationEngine:
         self.out.write('<parameterList>\n')
 
         if self.tokenizer.token_value != ')':
-            self._compie_type()
+            self._compile_type()
 
             check_type(self.tokenizer.token_type, TokenType.IDENTIFIER)
             write_token_and_advance(self.tokenizer, self.out)
@@ -107,7 +107,7 @@ class CompilationEngine:
                     break
                 write_token_and_advance(self.tokenizer, self.out)
 
-                self._compie_type()
+                self._compile_type()
 
                 check_type(self.tokenizer.token_type, TokenType.IDENTIFIER)
                 write_token_and_advance(self.tokenizer, self.out)
@@ -137,7 +137,7 @@ class CompilationEngine:
 
         write_token_and_advance(self.tokenizer, self.out)
 
-        self._compie_type()
+        self._compile_type()
 
         check_type(self.tokenizer.token_type, TokenType.IDENTIFIER)
         write_token_and_advance(self.tokenizer, self.out)
