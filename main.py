@@ -1,5 +1,5 @@
-from jack.engine import CompilationEngine
-from jack.tokenizer import JackTokenizer
+from jack import CompilationEngine
+from jack import JackTokenizer
 import sys
 import os
 
