@@ -1,8 +1,10 @@
 from typing import TextIO
 
 from jack.statements import StatementsCompiler
+from jack.symbol import SymbolTable, SymbolKind
 from jack.tokenizer import JackTokenizer, TokenType
-from jack.util import check_value, write_token_and_advance, check_type
+from jack.util import check_value, check_type
+from jack.writer import VMWriter
 
 
 class CompilationEngine:
@@ -10,18 +12,21 @@ class CompilationEngine:
         self.tokenizer = tokenizer
         self.tokenizer.advance()
         self.out = out
+        self.writer = VMWriter(out)
+        self.symbol_table = SymbolTable()
 
     def compile_class(self):
         self.out.write('<class>\n')
 
         check_value(self.tokenizer.token_value, 'class')
-        write_token_and_advance(self.tokenizer, self.out)
+        self.tokenizer.advance()
 
         check_type(self.tokenizer.token_type, TokenType.IDENTIFIER)
-        write_token_and_advance(self.tokenizer, self.out)
+        self.symbol_table.set_class_name(self.tokenizer.token_value)
+        self.tokenizer.advance()
 
         check_value(self.tokenizer.token_value, '{')
-        write_token_and_advance(self.tokenizer, self.out)
+        self.tokenizer.advance()
 
         while True:
             if self.tokenizer.token_value not in ('static', 'field'):
@@ -33,61 +38,72 @@ class CompilationEngine:
             self._compile_subroutine_dec()
 
         check_value(self.tokenizer.token_value, '}')
-        write_token_and_advance(self.tokenizer, self.out)
+        self.tokenizer.advance()
 
         self.out.write('</class>\n')
 
     def _compile_class_var_dec(self):
         self.out.write('<classVarDec>\n')
 
-        write_token_and_advance(self.tokenizer, self.out)
+        skind = SymbolKind(self.tokenizer.token_value)
+        self.tokenizer.advance()
 
-        self._compile_type()
+        stype = self._compile_type()
 
         check_type(self.tokenizer.token_type, TokenType.IDENTIFIER)
-        write_token_and_advance(self.tokenizer, self.out)
+        name = self.tokenizer.token_value
+        self.tokenizer.advance()
+
+        self.symbol_table.register(name, skind, stype)
 
         while True:
             if self.tokenizer.token_value != ',':
                 break
-            write_token_and_advance(self.tokenizer, self.out)
+            self.tokenizer.advance()
 
             check_type(self.tokenizer.token_type, TokenType.IDENTIFIER)
-            write_token_and_advance(self.tokenizer, self.out)
+            name = self.tokenizer.token_value
+            self.tokenizer.advance()
+
+            self.symbol_table.register(name, skind, stype)
 
         check_value(self.tokenizer.token_value, ';')
-        write_token_and_advance(self.tokenizer, self.out)
+        self.tokenizer.advance()
 
         self.out.write('</classVarDec>\n')
 
-    def _compile_type(self):
+    def _compile_type(self) -> str:
         check_type(self.tokenizer.token_type, TokenType.KEYWORD, TokenType.IDENTIFIER)
 
         if self.tokenizer.token_type == TokenType.KEYWORD:
             check_value(self.tokenizer.token_value, 'int', 'char', 'boolean')
 
-        write_token_and_advance(self.tokenizer, self.out)
+        result = self.tokenizer.token_value
+        self.tokenizer.advance()
+
+        return result
 
     def _compile_subroutine_dec(self):
         self.out.write('<subroutineDec>\n')
 
-        write_token_and_advance(self.tokenizer, self.out)
+        self.tokenizer.advance()
 
         if self.tokenizer.token_value == 'void':
-            write_token_and_advance(self.tokenizer, self.out)
+            self.tokenizer.advance()
         else:
             self._compile_type()
 
         check_type(self.tokenizer.token_type, TokenType.IDENTIFIER)
-        write_token_and_advance(self.tokenizer, self.out)
+        self.symbol_table.start_subroutine(self.tokenizer.token_value)
+        self.tokenizer.advance()
 
         check_value(self.tokenizer.token_value, '(')
-        write_token_and_advance(self.tokenizer, self.out)
+        self.tokenizer.advance()
 
         self._compile_parameter_list()
 
         check_value(self.tokenizer.token_value, ')')
-        write_token_and_advance(self.tokenizer, self.out)
+        self.tokenizer.advance()
 
         self._compile_subroutine_body()
 
@@ -97,20 +113,24 @@ class CompilationEngine:
         self.out.write('<parameterList>\n')
 
         if self.tokenizer.token_value != ')':
-            self._compile_type()
+            stype = self._compile_type()
 
             check_type(self.tokenizer.token_type, TokenType.IDENTIFIER)
-            write_token_and_advance(self.tokenizer, self.out)
+            name = self.tokenizer.token_value
+            self.tokenizer.advance()
+
+            self.symbol_table.register(name, SymbolKind.ARG, stype)
 
             while True:
                 if self.tokenizer.token_value != ',':
                     break
-                write_token_and_advance(self.tokenizer, self.out)
-
-                self._compile_type()
+                self.tokenizer.advance()
 
                 check_type(self.tokenizer.token_type, TokenType.IDENTIFIER)
-                write_token_and_advance(self.tokenizer, self.out)
+                name = self.tokenizer.token_value
+                self.tokenizer.advance()
+
+                self.symbol_table.register(name, SymbolKind.ARG, stype)
 
         self.out.write('</parameterList>\n')
 
@@ -118,39 +138,47 @@ class CompilationEngine:
         self.out.write('<subroutineBody>\n')
 
         check_value(self.tokenizer.token_value, '{')
-        write_token_and_advance(self.tokenizer, self.out)
+        self.tokenizer.advance()
 
         while True:
             if self.tokenizer.token_value != 'var':
                 break
             self._compile_var_dec()
 
+        self.writer.write_function(self.symbol_table.get_vm_func_name(), self.symbol_table.get_var_cnt(SymbolKind.VAR))
+
         StatementsCompiler(self.tokenizer, self.out).compile_statements()
 
         check_value(self.tokenizer.token_value, '}')
-        write_token_and_advance(self.tokenizer, self.out)
+        self.tokenizer.advance()
 
         self.out.write('</subroutineBody>\n')
 
     def _compile_var_dec(self):
         self.out.write('<varDec>\n')
 
-        write_token_and_advance(self.tokenizer, self.out)
+        self.tokenizer.advance()
 
-        self._compile_type()
+        stype = self._compile_type()
 
         check_type(self.tokenizer.token_type, TokenType.IDENTIFIER)
-        write_token_and_advance(self.tokenizer, self.out)
+        name = self.tokenizer.token_value
+        self.tokenizer.advance()
+
+        self.symbol_table.register(name, SymbolKind.VAR, stype)
 
         while True:
             if self.tokenizer.token_value != ',':
                 break
-            write_token_and_advance(self.tokenizer, self.out)
+            self.tokenizer.advance()
 
             check_type(self.tokenizer.token_type, TokenType.IDENTIFIER)
-            write_token_and_advance(self.tokenizer, self.out)
+            name = self.tokenizer.token_value
+            self.tokenizer.advance()
+
+            self.symbol_table.register(name, SymbolKind.VAR, stype)
 
         check_value(self.tokenizer.token_value, ';')
-        write_token_and_advance(self.tokenizer, self.out)
+        self.tokenizer.advance()
 
         self.out.write('</varDec>\n')
