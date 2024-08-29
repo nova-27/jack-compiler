@@ -11,13 +11,10 @@ class CompilationEngine:
     def __init__(self, tokenizer: JackTokenizer, out: TextIO):
         self.tokenizer = tokenizer
         self.tokenizer.advance()
-        self.out = out
         self.writer = VMWriter(out)
         self.symbol_table = SymbolTable()
 
     def compile_class(self):
-        self.out.write('<class>\n')
-
         check_value(self.tokenizer.token_value, 'class')
         self.tokenizer.advance()
 
@@ -40,11 +37,7 @@ class CompilationEngine:
         check_value(self.tokenizer.token_value, '}')
         self.tokenizer.advance()
 
-        self.out.write('</class>\n')
-
     def _compile_class_var_dec(self):
-        self.out.write('<classVarDec>\n')
-
         skind = SymbolKind(self.tokenizer.token_value)
         self.tokenizer.advance()
 
@@ -70,8 +63,6 @@ class CompilationEngine:
         check_value(self.tokenizer.token_value, ';')
         self.tokenizer.advance()
 
-        self.out.write('</classVarDec>\n')
-
     def _compile_type(self) -> str:
         check_type(self.tokenizer.token_type, TokenType.KEYWORD, TokenType.IDENTIFIER)
 
@@ -84,8 +75,6 @@ class CompilationEngine:
         return result
 
     def _compile_subroutine_dec(self):
-        self.out.write('<subroutineDec>\n')
-
         self.tokenizer.advance()
 
         if self.tokenizer.token_value == 'void':
@@ -107,11 +96,7 @@ class CompilationEngine:
 
         self._compile_subroutine_body()
 
-        self.out.write('</subroutineDec>\n')
-
     def _compile_parameter_list(self):
-        self.out.write('<parameterList>\n')
-
         if self.tokenizer.token_value != ')':
             stype = self._compile_type()
 
@@ -132,11 +117,7 @@ class CompilationEngine:
 
                 self.symbol_table.register(name, SymbolKind.ARG, stype)
 
-        self.out.write('</parameterList>\n')
-
     def _compile_subroutine_body(self):
-        self.out.write('<subroutineBody>\n')
-
         check_value(self.tokenizer.token_value, '{')
         self.tokenizer.advance()
 
@@ -147,16 +128,12 @@ class CompilationEngine:
 
         self.writer.write_function(self.symbol_table.get_vm_func_name(), self.symbol_table.get_var_cnt(SymbolKind.VAR))
 
-        StatementsCompiler(self.tokenizer, self.out, self.writer, self.symbol_table).compile_statements()
+        StatementsCompiler(self.tokenizer, self.writer, self.symbol_table).compile_statements()
 
         check_value(self.tokenizer.token_value, '}')
         self.tokenizer.advance()
 
-        self.out.write('</subroutineBody>\n')
-
     def _compile_var_dec(self):
-        self.out.write('<varDec>\n')
-
         self.tokenizer.advance()
 
         stype = self._compile_type()
@@ -180,5 +157,3 @@ class CompilationEngine:
 
         check_value(self.tokenizer.token_value, ';')
         self.tokenizer.advance()
-
-        self.out.write('</varDec>\n')

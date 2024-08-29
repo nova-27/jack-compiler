@@ -25,7 +25,7 @@ if __name__ == '__main__':
     for src_file in src_files:
         tokenizer = JackTokenizer(open(src_file, 'r'))
 
-        dst_file = src_file[:src_file.rfind('.')] + '.xml'
+        dst_file = src_file[:src_file.rfind('.')] + '.vm'
         dst = open(dst_file, 'w')
 
         engine = CompilationEngine(tokenizer, dst)

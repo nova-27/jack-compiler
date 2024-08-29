@@ -1,5 +1,3 @@
-from typing import TextIO
-
 from jack.symbol import SymbolTable, SymbolKind
 from jack.tokenizer import JackTokenizer, TokenType
 from jack.util import check_type, check_value
@@ -7,15 +5,12 @@ from jack.writer import VMWriter, VMSegment, Operator
 
 
 class ExpressionCompiler:
-    def __init__(self, tokenizer: JackTokenizer, out: TextIO, writer: VMWriter, symbol_table: SymbolTable):
+    def __init__(self, tokenizer: JackTokenizer, writer: VMWriter, symbol_table: SymbolTable):
         self.tokenizer = tokenizer
-        self.out = out
         self.writer = writer
         self.symbol_table = symbol_table
 
     def compile_expression(self):
-        self.out.write('<expression>\n')
-
         self._compile_term()
 
         while True:
@@ -32,11 +27,7 @@ class ExpressionCompiler:
             else:
                 self.writer.write_arithmetic(Operator(op))
 
-        self.out.write('</expression>\n')
-
     def _compile_term(self):
-        self.out.write('<term>\n')
-
         if self.tokenizer.token_type == TokenType.INT_CONST:
             self.writer.write_push(VMSegment.CONST, int(self.tokenizer.token_value))
             self.tokenizer.advance()
@@ -100,8 +91,6 @@ class ExpressionCompiler:
         else:
             raise SyntaxError(f'unexpected term: {self.tokenizer.token_value}')
 
-        self.out.write('</term>\n')
-
     def compile_subroutine_call(self):
         check_type(self.tokenizer.token_type, TokenType.IDENTIFIER)
         class_name = self.tokenizer.token_value
@@ -143,7 +132,6 @@ class ExpressionCompiler:
         self.writer.write_call(f'{class_name}.{subroutine_name}', arg_cnt)
 
     def _compile_expression_list(self) -> int:
-        self.out.write('<expressionList>\n')
         exp_cnt = 0
 
         if self.tokenizer.token_value != ')':
@@ -157,5 +145,4 @@ class ExpressionCompiler:
                 self.compile_expression()
                 exp_cnt += 1
 
-        self.out.write('</expressionList>\n')
         return exp_cnt

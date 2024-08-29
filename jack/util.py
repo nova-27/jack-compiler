@@ -1,25 +1,4 @@
-import warnings
-from typing import TextIO
-
-from xml.sax.saxutils import escape
-
-from jack.tokenizer import JackTokenizer, TokenType
-
-
-def write_token_and_advance(tokenizer: JackTokenizer, out: TextIO):
-    warnings.warn("Deprecated method", DeprecationWarning)
-
-    if tokenizer.token_type == TokenType.EOF:
-        raise EOFError()
-
-    token_type = tokenizer.token_type.value
-    token_value = tokenizer.token_value
-
-    out.write(
-        f'<{token_type}> {escape(token_value)} </{token_type}>\n'
-    )
-
-    tokenizer.advance()
+from jack.tokenizer import TokenType
 
 
 def check_type(target: TokenType, *expected: TokenType):
