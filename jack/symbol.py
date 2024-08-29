@@ -7,6 +7,7 @@ class SymbolKind(Enum):
     FIELD = 'field'
     ARG = 'argument'
     VAR = 'var'
+    NONE = 'none'
 
 
 class SymbolAttrs:
@@ -25,6 +26,9 @@ class SymbolTable:
     def set_class_name(self, name: str):
         self._class_name = name
 
+    def get_class_name(self) -> str:
+        return self._class_name
+
     def start_subroutine(self, name: str):
         self._subroutine_name = name
         self._subroutine_symbols = OrderedDict()
@@ -40,7 +44,7 @@ class SymbolTable:
         else:
             self._subroutine_symbols[name] = attrs
 
-    def get_var_cnt(self, skind: SymbolKind):
+    def get_var_cnt(self, skind: SymbolKind) -> int:
         cnt = 0
 
         if skind == SymbolKind.VAR:
@@ -50,3 +54,27 @@ class SymbolTable:
                 cnt += 1
 
         return cnt
+
+    def kind_of(self, name: str) -> SymbolKind:
+        if name in self._class_symbols:
+            return self._class_symbols[name].skind
+        elif name in self._subroutine_symbols:
+            return self._subroutine_symbols[name].skind
+        else:
+            return SymbolKind.NONE
+
+    def type_of(self, name: str) -> str:
+        if name in self._class_symbols:
+            return self._class_symbols[name].stype
+        elif name in self._subroutine_symbols:
+            return self._subroutine_symbols[name].stype
+        else:
+            return ''
+
+    def index_of(self, name: str) -> int:
+        if name in self._class_symbols:
+            return list(self._class_symbols.keys()).index(name)
+        elif name in self._subroutine_symbols:
+            return list(self._subroutine_symbols.keys()).index(name)
+        else:
+            return -1

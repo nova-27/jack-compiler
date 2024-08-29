@@ -1,14 +1,18 @@
 from typing import TextIO
 
 from jack.expression import ExpressionCompiler
+from jack.symbol import SymbolTable
 from jack.tokenizer import JackTokenizer, TokenType
 from jack.util import write_token_and_advance, check_type, check_value
+from jack.writer import VMWriter
 
 
 class StatementsCompiler:
-    def __init__(self, tokenizer: JackTokenizer, out: TextIO):
+    def __init__(self, tokenizer: JackTokenizer, out: TextIO, writer: VMWriter, symbol_table: SymbolTable):
         self.tokenizer = tokenizer
         self.out = out
+        self.writer = writer
+        self.symbol_table = symbol_table
 
     def compile_statements(self):
         self.out.write('<statements>\n')
@@ -40,7 +44,7 @@ class StatementsCompiler:
         if self.tokenizer.token_value == '[':
             write_token_and_advance(self.tokenizer, self.out)
 
-            ExpressionCompiler(self.tokenizer, self.out).compile_expression()
+            ExpressionCompiler(self.tokenizer, self.out, self.writer, self.symbol_table).compile_expression()
 
             check_value(self.tokenizer.token_value, ']')
             write_token_and_advance(self.tokenizer, self.out)
@@ -48,7 +52,7 @@ class StatementsCompiler:
         check_value(self.tokenizer.token_value, '=')
         write_token_and_advance(self.tokenizer, self.out)
 
-        ExpressionCompiler(self.tokenizer, self.out).compile_expression()
+        ExpressionCompiler(self.tokenizer, self.out, self.writer, self.symbol_table).compile_expression()
 
         check_value(self.tokenizer.token_value, ';')
         write_token_and_advance(self.tokenizer, self.out)
@@ -63,7 +67,7 @@ class StatementsCompiler:
         check_value(self.tokenizer.token_value, '(')
         write_token_and_advance(self.tokenizer, self.out)
 
-        ExpressionCompiler(self.tokenizer, self.out).compile_expression()
+        ExpressionCompiler(self.tokenizer, self.out, self.writer, self.symbol_table).compile_expression()
 
         check_value(self.tokenizer.token_value, ')')
         write_token_and_advance(self.tokenizer, self.out)
@@ -97,7 +101,7 @@ class StatementsCompiler:
         check_value(self.tokenizer.token_value, '(')
         write_token_and_advance(self.tokenizer, self.out)
 
-        ExpressionCompiler(self.tokenizer, self.out).compile_expression()
+        ExpressionCompiler(self.tokenizer, self.out, self.writer, self.symbol_table).compile_expression()
 
         check_value(self.tokenizer.token_value, ')')
         write_token_and_advance(self.tokenizer, self.out)
@@ -117,7 +121,7 @@ class StatementsCompiler:
 
         write_token_and_advance(self.tokenizer, self.out)
 
-        ExpressionCompiler(self.tokenizer, self.out).compile_subroutine_call()
+        ExpressionCompiler(self.tokenizer, self.out, self.writer, self.symbol_table).compile_subroutine_call()
 
         check_value(self.tokenizer.token_value, ';')
         write_token_and_advance(self.tokenizer, self.out)
@@ -130,7 +134,7 @@ class StatementsCompiler:
         write_token_and_advance(self.tokenizer, self.out)
 
         if self.tokenizer.token_value != ';':
-            ExpressionCompiler(self.tokenizer, self.out).compile_expression()
+            ExpressionCompiler(self.tokenizer, self.out, self.writer, self.symbol_table).compile_expression()
 
         check_value(self.tokenizer.token_value, ';')
         write_token_and_advance(self.tokenizer, self.out)

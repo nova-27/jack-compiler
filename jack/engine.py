@@ -147,7 +147,7 @@ class CompilationEngine:
 
         self.writer.write_function(self.symbol_table.get_vm_func_name(), self.symbol_table.get_var_cnt(SymbolKind.VAR))
 
-        StatementsCompiler(self.tokenizer, self.out).compile_statements()
+        StatementsCompiler(self.tokenizer, self.out, self.writer, self.symbol_table).compile_statements()
 
         check_value(self.tokenizer.token_value, '}')
         self.tokenizer.advance()
