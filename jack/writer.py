@@ -32,19 +32,31 @@ class VMWriter:
         self.out = out
 
     def write_function(self, name: str, local_cnt: int):
-        self.out.write(f'function {name} {local_cnt}')
+        self.out.write(f'function {name} {local_cnt}\n')
 
     def write_call(self, name: str, arg_cnt: int):
-        self.out.write(f'call {name} {arg_cnt}')
+        self.out.write(f'call {name} {arg_cnt}\n')
 
     def write_push(self, segment: VMSegment, index: int):
-        self.out.write(f'push {segment.value} {index}')
+        self.out.write(f'push {segment.value} {index}\n')
 
     def write_pop(self, segment: VMSegment, index: int):
-        self.out.write(f'pop {segment.value} {index}')
+        self.out.write(f'pop {segment.value} {index}\n')
 
     def write_arithmetic(self, command: Operator):
-        self.out.write(command.name.lower())
+        self.out.write(command.name.lower() + '\n')
+
+    def write_return(self):
+        self.out.write('return\n')
+
+    def write_if(self, label: str):
+        self.out.write(f'if-goto {label}\n')
+
+    def write_goto(self, label: str):
+        self.out.write(f'goto {label}\n')
+
+    def write_label(self, label: str):
+        self.out.write(f'label {label}\n')
 
     @staticmethod
     def skind2seg(skind: SymbolKind):
