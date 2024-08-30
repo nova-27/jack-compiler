@@ -42,7 +42,7 @@ class StatementsCompiler:
             self.writer.write_push(seg, index)
             ExpressionCompiler(self.tokenizer, self.writer, self.symbol_table).compile_expression()
             self.writer.write_arithmetic(Operator.ADD)
-            self.writer.write_pop(VMSegment.TEMP, 0)
+            self.writer.write_pop(VMSegment.TEMP, 1)
 
             check_value(self.tokenizer.token_value, ']')
             self.tokenizer.advance()
@@ -57,7 +57,7 @@ class StatementsCompiler:
         self.tokenizer.advance()
 
         if is_array:
-            self.writer.write_push(VMSegment.TEMP, 0)
+            self.writer.write_push(VMSegment.TEMP, 1)
             self.writer.write_pop(VMSegment.POINTER, 1)
             self.writer.write_pop(VMSegment.THAT, 0)
         else:
