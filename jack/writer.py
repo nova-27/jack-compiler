@@ -65,4 +65,4 @@ class VMWriter:
         elif skind == SymbolKind.FIELD:
             return VMSegment.THIS
         else:
-            return VMSegment(skind)
+            return VMSegment(skind.value)

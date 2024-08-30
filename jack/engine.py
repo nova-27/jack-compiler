@@ -111,6 +111,8 @@ class CompilationEngine:
                     break
                 self.tokenizer.advance()
 
+                stype = self._compile_type()
+
                 check_type(self.tokenizer.token_type, TokenType.IDENTIFIER)
                 name = self.tokenizer.token_value
                 self.tokenizer.advance()
