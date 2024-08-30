@@ -18,7 +18,7 @@ class VMSegment(Enum):
 class Operator(Enum):
     ADD = '+'
     SUB = '-'
-    NEG = '-'
+    NEG = ''
     EQ = '='
     GT = '>'
     LT = '<'

@@ -46,7 +46,7 @@ class ExpressionCompiler:
             else:
                 self.writer.write_push(VMSegment.CONST, 0)
                 if self.tokenizer.token_value == 'true':
-                    self.writer.write_arithmetic(Operator.NEG)
+                    self.writer.write_arithmetic(Operator.NOT)
             self.tokenizer.advance()
         elif self.tokenizer.token_type == TokenType.IDENTIFIER:
             next_value = self.tokenizer.look_ahead()[1]
@@ -84,10 +84,10 @@ class ExpressionCompiler:
             check_value(self.tokenizer.token_value, ')')
             self.tokenizer.advance()
         elif self.tokenizer.token_value in ('-', '~'):
-            op = self.tokenizer.token_value
+            op = Operator.NEG if self.tokenizer.token_value == '-' else Operator.NOT
             self.tokenizer.advance()
             self._compile_term()
-            self.writer.write_arithmetic(Operator(op))
+            self.writer.write_arithmetic(op)
         else:
             raise SyntaxError(f'unexpected term: {self.tokenizer.token_value}')
 
