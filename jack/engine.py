@@ -1,10 +1,10 @@
 from typing import TextIO
 
 from jack.statements import StatementsCompiler
-from jack.symbol import SymbolTable, SymbolKind
+from jack.symbol import SymbolTable, SymbolKind, SubroutineKind
 from jack.tokenizer import JackTokenizer, TokenType
 from jack.util import check_value, check_type
-from jack.writer import VMWriter
+from jack.writer import VMWriter, VMSegment
 
 
 class CompilationEngine:
@@ -75,6 +75,7 @@ class CompilationEngine:
         return result
 
     def _compile_subroutine_dec(self):
+        kind = SubroutineKind(self.tokenizer.token_value)
         self.tokenizer.advance()
 
         if self.tokenizer.token_value == 'void':
@@ -83,8 +84,11 @@ class CompilationEngine:
             self._compile_type()
 
         check_type(self.tokenizer.token_type, TokenType.IDENTIFIER)
-        self.symbol_table.start_subroutine(self.tokenizer.token_value)
+        self.symbol_table.start_subroutine(kind, self.tokenizer.token_value)
         self.tokenizer.advance()
+
+        if kind == SubroutineKind.METHOD:
+            self.symbol_table.register('this', SymbolKind.ARG, self.symbol_table.get_class_name())
 
         check_value(self.tokenizer.token_value, '(')
         self.tokenizer.advance()
@@ -129,6 +133,14 @@ class CompilationEngine:
             self._compile_var_dec()
 
         self.writer.write_function(self.symbol_table.get_vm_func_name(), self.symbol_table.get_var_cnt(SymbolKind.VAR))
+        if self.symbol_table.get_subroutine_kind() == SubroutineKind.CONSTRUCTOR:
+            self.writer.write_push(VMSegment.CONST, self.symbol_table.get_var_cnt(SymbolKind.FIELD))
+            self.writer.write_call('Memory.alloc', 1)
+            self.writer.write_pop(VMSegment.POINTER, 0)
+            pass
+        elif self.symbol_table.get_subroutine_kind() == SubroutineKind.METHOD:
+            self.writer.write_push(VMSegment.ARG, 0)
+            self.writer.write_pop(VMSegment.POINTER, 0)
 
         StatementsCompiler(self.tokenizer, self.writer, self.symbol_table).compile_statements()
 

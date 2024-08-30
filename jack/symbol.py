@@ -10,6 +10,12 @@ class SymbolKind(Enum):
     NONE = 'none'
 
 
+class SubroutineKind(Enum):
+    CONSTRUCTOR = 'constructor'
+    FUNCTION = 'function'
+    METHOD = 'method'
+
+
 class SymbolAttrs:
     def __init__(self, skind: SymbolKind, stype: str):
         self.skind = skind
@@ -20,6 +26,7 @@ class SymbolTable:
     def __init__(self):
         self._class_name = ''
         self._class_symbols: OrderedDict[str, SymbolAttrs] = OrderedDict()
+        self._subroutine_kind = SubroutineKind.FUNCTION
         self._subroutine_name = ''
         self._subroutine_symbols: OrderedDict[str, SymbolAttrs] = OrderedDict()
         self.if_index = 0
@@ -31,7 +38,8 @@ class SymbolTable:
     def get_class_name(self) -> str:
         return self._class_name
 
-    def start_subroutine(self, name: str):
+    def start_subroutine(self, kind: SubroutineKind, name: str):
+        self._subroutine_kind = kind
         self._subroutine_name = name
         self._subroutine_symbols = OrderedDict()
         self.if_index = 0
@@ -39,6 +47,9 @@ class SymbolTable:
 
     def get_vm_func_name(self) -> str:
         return f'{self._class_name}.{self._subroutine_name}'
+
+    def get_subroutine_kind(self) -> SubroutineKind:
+        return self._subroutine_kind
 
     def register(self, name: str, skind: SymbolKind, stype: str):
         attrs = SymbolAttrs(skind, stype)
@@ -53,6 +64,11 @@ class SymbolTable:
 
         if skind == SymbolKind.VAR:
             for attrs in self._subroutine_symbols.values():
+                if attrs.skind != skind:
+                    continue
+                cnt += 1
+        elif skind == SymbolKind.FIELD:
+            for attrs in self._class_symbols.values():
                 if attrs.skind != skind:
                     continue
                 cnt += 1
