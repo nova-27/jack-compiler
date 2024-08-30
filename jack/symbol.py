@@ -22,6 +22,8 @@ class SymbolTable:
         self._class_symbols: OrderedDict[str, SymbolAttrs] = OrderedDict()
         self._subroutine_name = ''
         self._subroutine_symbols: OrderedDict[str, SymbolAttrs] = OrderedDict()
+        self.if_index = 0
+        self.while_index = 0
 
     def set_class_name(self, name: str):
         self._class_name = name
@@ -32,6 +34,8 @@ class SymbolTable:
     def start_subroutine(self, name: str):
         self._subroutine_name = name
         self._subroutine_symbols = OrderedDict()
+        self.if_index = 0
+        self.while_index = 0
 
     def get_vm_func_name(self) -> str:
         return f'{self._class_name}.{self._subroutine_name}'
@@ -56,25 +60,38 @@ class SymbolTable:
         return cnt
 
     def kind_of(self, name: str) -> SymbolKind:
-        if name in self._class_symbols:
-            return self._class_symbols[name].skind
-        elif name in self._subroutine_symbols:
+        if name in self._subroutine_symbols:
             return self._subroutine_symbols[name].skind
+        elif name in self._class_symbols:
+            return self._class_symbols[name].skind
         else:
             return SymbolKind.NONE
 
     def type_of(self, name: str) -> str:
-        if name in self._class_symbols:
-            return self._class_symbols[name].stype
-        elif name in self._subroutine_symbols:
+        if name in self._subroutine_symbols:
             return self._subroutine_symbols[name].stype
+        elif name in self._class_symbols:
+            return self._class_symbols[name].stype
         else:
             return ''
 
     def index_of(self, name: str) -> int:
-        if name in self._class_symbols:
-            return list(self._class_symbols.keys()).index(name)
-        elif name in self._subroutine_symbols:
-            return list(self._subroutine_symbols.keys()).index(name)
-        else:
-            return -1
+        kind = self.kind_of(name)
+        cnt = 0
+
+        if name in self._subroutine_symbols:
+            for n, a in self._subroutine_symbols.items():
+                if a.skind != kind:
+                    continue
+                if n == name:
+                    break
+                cnt += 1
+        elif name in self._class_symbols:
+            for n, a in self._class_symbols.items():
+                if a.skind != kind:
+                    continue
+                if n == name:
+                    break
+                cnt += 1
+
+        return cnt
