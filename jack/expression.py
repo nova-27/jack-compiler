@@ -13,9 +13,7 @@ class ExpressionCompiler:
     def compile_expression(self):
         self._compile_term()
 
-        while True:
-            if self.tokenizer.token_value not in ('+', '-', '*', '/', '&', '|', '<', '>', '='):
-                break
+        while self.tokenizer.token_value in ('+', '-', '*', '/', '&', '|', '<', '>', '='):
             op = self.tokenizer.token_value
             self.tokenizer.advance()
             self._compile_term()
@@ -138,9 +136,7 @@ class ExpressionCompiler:
             self.compile_expression()
             exp_cnt += 1
 
-            while True:
-                if self.tokenizer.token_value != ',':
-                    break
+            while self.tokenizer.token_value == ',':
                 self.tokenizer.advance()
                 self.compile_expression()
                 exp_cnt += 1

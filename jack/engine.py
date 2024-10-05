@@ -25,13 +25,9 @@ class CompilationEngine:
         check_value(self.tokenizer.token_value, '{')
         self.tokenizer.advance()
 
-        while True:
-            if self.tokenizer.token_value not in ('static', 'field'):
-                break
+        while self.tokenizer.token_value in ('static', 'field'):
             self._compile_class_var_dec()
-        while True:
-            if self.tokenizer.token_value not in ('constructor', 'function', 'method'):
-                break
+        while self.tokenizer.token_value in ('constructor', 'function', 'method'):
             self._compile_subroutine_dec()
 
         check_value(self.tokenizer.token_value, '}')
@@ -49,9 +45,7 @@ class CompilationEngine:
 
         self.symbol_table.register(name, skind, stype)
 
-        while True:
-            if self.tokenizer.token_value != ',':
-                break
+        while self.tokenizer.token_value == ',':
             self.tokenizer.advance()
 
             check_type(self.tokenizer.token_type, TokenType.IDENTIFIER)
@@ -110,9 +104,7 @@ class CompilationEngine:
 
             self.symbol_table.register(name, SymbolKind.ARG, stype)
 
-            while True:
-                if self.tokenizer.token_value != ',':
-                    break
+            while self.tokenizer.token_value == ',':
                 self.tokenizer.advance()
 
                 stype = self._compile_type()
@@ -127,9 +119,7 @@ class CompilationEngine:
         check_value(self.tokenizer.token_value, '{')
         self.tokenizer.advance()
 
-        while True:
-            if self.tokenizer.token_value != 'var':
-                break
+        while self.tokenizer.token_value == 'var':
             self._compile_var_dec()
 
         self.writer.write_function(self.symbol_table.get_vm_func_name(), self.symbol_table.get_var_cnt(SymbolKind.VAR))
@@ -158,9 +148,7 @@ class CompilationEngine:
 
         self.symbol_table.register(name, SymbolKind.VAR, stype)
 
-        while True:
-            if self.tokenizer.token_value != ',':
-                break
+        while self.tokenizer.token_value == ',':
             self.tokenizer.advance()
 
             check_type(self.tokenizer.token_type, TokenType.IDENTIFIER)
