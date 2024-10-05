@@ -1,0 +1,23 @@
+class Memory {
+    function void init() {
+        // TODO
+        return;
+    }
+
+    function int peek(int address) {
+        return address[0];
+    }
+
+    function void poke(int address, int value) {
+        let address[0] = value;
+        return;
+    }
+
+    function Array alloc(int size) {
+        // TODO
+    }
+
+    function void deAlloc(Array o) {
+        // TODO
+    }
+}
