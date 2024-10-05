@@ -38,6 +38,8 @@ class JackTokenizer:
 
         # ignore comments
         for c in COMMENT:
+            if len(self.buffer) == 1:
+                self.buffer += self.stream.read(1)
             if not self.buffer.startswith(c[0]):
                 continue
             self._read_until(c[1])
