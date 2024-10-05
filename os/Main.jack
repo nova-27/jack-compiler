@@ -1,6 +1,10 @@
 class Main {
     function void main() {
-        do Memory.poke(16384, true);
+        var Array b1, b2;
+        let b1 = Memory.alloc(3);
+        let b2 = Memory.alloc(4);
+        do Memory.deAlloc(b1);
+        do Memory.deAlloc(b2);
         return;
     }
 }

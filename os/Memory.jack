@@ -1,6 +1,10 @@
 class Memory {
+    static Array heapBase; 
+
     function void init() {
-        // TODO
+        let heapBase = 2048;
+        let heapBase[0] = 14336;
+        let heapBase[1] = null;
         return;
     }
 
@@ -13,11 +17,60 @@ class Memory {
         return;
     }
 
+    // first-fit allocation
     function Array alloc(int size) {
-        // TODO
+        var Array cur_block, block;
+
+        // 1 for length
+        let size = size + 1;
+
+        // find large enough block
+        let cur_block = heapBase;
+        while (~(cur_block = null)) {
+            if ((cur_block[0] - 1) > size) {
+                let block = cur_block;
+                let cur_block = null;
+            } else {
+                let cur_block = cur_block[1];
+            }
+        }
+
+        if (block = null) {
+            do Sys.error();
+        }
+
+        let block[0] = block[0] - size;
+        let block = block + block[0];
+        
+        let block[0] = size;
+        return block + 1;
     }
 
     function void deAlloc(Array o) {
-        // TODO
+        var Array prev_block, next_block;
+
+        let o = o - 1;
+        let prev_block = heapBase;
+        while ((prev_block[1] < o) & ~(prev_block[1] = null)) {
+            let prev_block = prev_block[1];
+        }
+
+        let next_block = prev_block[1];
+        if (prev_block + prev_block[0] = o) {
+            // Merge with previous free block
+            let prev_block[0] = prev_block[0] + o[0]; 
+            let o = prev_block;
+        } else {
+            let prev_block[1] = o;
+            let o[1] = next_block;
+        }
+
+        if (o + o[0] = next_block) {
+            // Merge with next free block
+            let o[1] = next_block[1];
+            let o[0] = o[0] + next_block[0];
+        }
+        
+        return;
     }
 }
