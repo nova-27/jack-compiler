@@ -82,11 +82,19 @@ class Math {
     }
 
     function int min(int x, int y) {
-        // TOOD
+        if (x > y) {
+            return y;
+        } else {
+            return x;
+        }
     }
 
     function int max(int x, int y) {
-        // TOOD
+        if (x > y) {
+            return x;
+        } else {
+            return y;
+        }
     }
 
     function int sqrt(int x) {
