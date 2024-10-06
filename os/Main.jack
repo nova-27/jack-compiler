@@ -2,8 +2,7 @@ class Main {
     function void main() {
         var Array v;
         let v = Memory.alloc(2);
-        let v[0] = 1145 / 12;
-        let v[1] = 12045 / -3;
+        let v[0] = Math.sqrt(32767);
         return;
     }
 }

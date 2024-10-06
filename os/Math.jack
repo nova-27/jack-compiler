@@ -101,6 +101,19 @@ class Math {
     }
 
     function int sqrt(int x) {
-        // TOOD
+        var int y, j, tmp, tmpSquared;
+
+        let j = 7;
+        while (j > -1) {
+            let tmp = y + twoToThe[j];
+            let tmpSquared = tmp * tmp;
+            if ((tmpSquared - 1 < x) & (tmpSquared > 0)) {
+                let y = tmp;
+            } 
+
+            let j = j - 1;
+        }
+
+        return y;
     }
 }
