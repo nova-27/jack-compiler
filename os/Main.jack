@@ -1,8 +1,11 @@
 class Main {
     function void main() {
         var Array v;
-        let v = Memory.alloc(1);
-        let v[0] = 114 * -51;
+        let v = Memory.alloc(4);
+        let v[0] = 1751 / 41;
+        let v[1] = -2651 / 917;
+        let v[2] = 20530 / -13;
+        let v[3] = -16749 / -189;
         return;
     }
 }

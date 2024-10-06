@@ -18,7 +18,11 @@ class Math {
     }
 
     function int abs(int x) {
-        // TOOD
+        if (Math.bit(x, 15)) {
+            return -x;
+        } else {
+            return x;
+        }
     }
 
     function int multiply(int x, int y) {
@@ -44,7 +48,37 @@ class Math {
     }
 
     function int divide(int x, int y) {
-        // TOOD
+        var int absX, absY;
+        var boolean isXPlus, isYPlus;
+
+        let absX = Math.abs(x);
+        let absY = Math.abs(y);
+
+        let isXPlus = (x = absX);
+        let isYPlus = (y = absY);
+        if ((isXPlus & isYPlus) | ~(isXPlus | isYPlus)) {
+            // same sign
+            return Math.naturalDivide(absX, absY);
+        } else {
+            // different sign
+            return -Math.naturalDivide(absX, absY);
+        }
+    }
+
+    function int naturalDivide(int x, int y) {
+        var int q;
+
+        if (x < y) {
+            return 0;
+        }
+
+        let q = Math.divide(x, y + y);
+        let q = q + q;
+        if (x - (q * y) < y) {
+            return q;
+        } else {
+            return q + 1;
+        }
     }
 
     function int min(int x, int y) {
