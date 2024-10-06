@@ -4,8 +4,7 @@ class Main {
         do Screen.setColor(true);
         do Screen.clearScreen();
         do Screen.setColor(false);
-        do Screen.drawLine(0, 255, 511, 0);
-        do Screen.drawLine(511, 255, 0, 0);        
+        do Screen.drawCircle(30, 50, 20);
         return;
     }
 }

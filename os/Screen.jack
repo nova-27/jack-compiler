@@ -88,6 +88,23 @@ class Screen {
     }
 
     function void drawCircle(int x, int y, int r) {
-        // TODO
+        var int a, b, rSquared, l;
+
+        let rSquared = r * r;
+
+        let b = -r;
+        while (b < (r + 1)) {
+            let l = Math.sqrt(rSquared - (b * b));
+            
+            let a = -l;
+            while (a < (l + 1)) {
+                do Screen.drawPixel(x + a, y + b);
+                let a = a + 1;
+            }
+
+            let b = b + 1;
+        }
+
+        return;
     }
 }
