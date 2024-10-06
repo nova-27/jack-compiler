@@ -19,11 +19,12 @@ class String {
     }
 
     method char charAt(int j) {
-        // TODO
+        return chars[j];
     }
 
     method void setCharAt(int j, char c) {
-        // TODO
+        let chars[j] = c;
+        return;
     }
 
     method String appendChar(char c) {
