@@ -1,0 +1,46 @@
+class Screen {
+    static boolean _b;
+
+    function void init() {
+        // TODO
+        return;
+    }
+
+    function void clearScreen() {
+        // TODO
+    }
+
+    function void setColor(boolean b) {
+        let _b = b;
+        return;
+    }
+
+    function void drawPixel(int x, int y) {
+        var int address, data, bitPos;
+
+        let address = 16384 + (y * 32) + (x / 16);
+        let data = Memory.peek(address);
+        let bitPos = x & 15;
+
+        if (_b) {
+            let data = data | Math.getTwoToThe(bitPos);
+        } else {
+            let data = data & (true - Math.getTwoToThe(bitPos));
+        }
+
+        do Memory.poke(address, data);
+        return;
+    }
+
+    function void drawLine(int x1, int y1, int x2, int y2) {
+        // TODO
+    }
+
+    function void drawRectangle(int x1, int y1, int x2, int y2) {
+        // TODO
+    }
+
+    function void drawCircle(int x, int y, int r) {
+        // TODO
+    }
+}

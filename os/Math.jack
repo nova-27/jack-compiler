@@ -18,6 +18,10 @@ class Math {
         return;
     }
 
+    function void getTwoToThe(int n) {
+        return twoToThe[n];
+    }
+
     function int abs(int x) {
         if (Math.bit(x, 15)) {
             return -x;

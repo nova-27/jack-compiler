@@ -1,8 +1,12 @@
 class Main {
     function void main() {
         var Array v;
-        let v = Memory.alloc(2);
-        let v[0] = Math.sqrt(32767);
+        do Screen.setColor(true);
+        do Screen.drawPixel(0, 0);
+        do Screen.drawPixel(1, 1);
+        do Screen.drawPixel(2, 2);
+        do Screen.setColor(false);
+        do Screen.drawPixel(1, 1);
         return;
     }
 }
