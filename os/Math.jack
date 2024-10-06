@@ -1,5 +1,6 @@
 class Math {
     static Array twoToThe;
+    static int divisionTemp;
 
     function void init() {
         var int i, v;
@@ -69,14 +70,16 @@ class Math {
         var int q;
 
         if (x < y) {
+            let divisionTemp = 0;
             return 0;
         }
 
-        let q = Math.divide(x, y + y);
+        let q = Math.naturalDivide(x, y + y);
         let q = q + q;
-        if (x - (q * y) < y) {
+        if (x - divisionTemp < y) {
             return q;
         } else {
+            let divisionTemp = divisionTemp + y;
             return q + 1;
         }
     }
