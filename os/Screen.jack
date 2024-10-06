@@ -2,7 +2,7 @@ class Screen {
     static boolean _b;
 
     function void init() {
-        // TODO
+        let _b = false;
         return;
     }
 
@@ -84,7 +84,20 @@ class Screen {
     }
 
     function void drawRectangle(int x1, int y1, int x2, int y2) {
-        // TODO
+        var int x, y;
+
+        let y = y1;
+        while (y - 1 < y2) {
+            let x = x1;
+            while (x - 1 < x2) {
+                do Screen.drawPixel(x, y);
+                let x = x + 1;
+            }
+
+            let y = y + 1;
+        }
+
+        return;
     }
 
     function void drawCircle(int x, int y, int r) {
@@ -93,11 +106,11 @@ class Screen {
         let rSquared = r * r;
 
         let b = -r;
-        while (b < (r + 1)) {
+        while (b - 1 < r) {
             let l = Math.sqrt(rSquared - (b * b));
             
             let a = -l;
-            while (a < (l + 1)) {
+            while (a - 1 < l) {
                 do Screen.drawPixel(x + a, y + b);
                 let a = a + 1;
             }
