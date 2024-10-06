@@ -4,7 +4,8 @@ class Main {
         do Screen.setColor(true);
         do Screen.clearScreen();
         do Screen.setColor(false);
-        do Screen.drawPixel(3, 3);        
+        do Screen.drawLine(0, 255, 511, 0);
+        do Screen.drawLine(511, 255, 0, 0);        
         return;
     }
 }

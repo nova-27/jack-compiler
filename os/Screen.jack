@@ -41,7 +41,46 @@ class Screen {
     }
 
     function void drawLine(int x1, int y1, int x2, int y2) {
-        // TODO
+        var int a, b, dx, dy, adyMinusbdx;
+        var boolean neg;
+
+        if (x1 > x2) {
+            let a = x1;
+            let b = y1;
+            let x1 = x2;
+            let y1 = y2;
+            let x2 = a;
+            let y2 = b;
+        }
+
+        let a = 0;
+        let b = 0;
+        let dx = x2 - x1;
+        let dy = y2 - y1;
+
+        if (Math.bit(dy, 15)) {
+            // slope is negative
+            let neg = true;
+            let dy = Math.abs(dy);
+        }
+
+        while ((a - 1 < dx) & (b - 1 < dy)) {
+            if (neg) {
+                do Screen.drawPixel(x1 + a, y1 - b);
+            } else {
+                do Screen.drawPixel(x1 + a, y1 + b);
+            }
+
+            if (adyMinusbdx > 0) {
+                let b = b + 1;
+                let adyMinusbdx = adyMinusbdx - dx;
+            } else {
+                let a = a + 1;
+                let adyMinusbdx = adyMinusbdx + dy;
+            }
+        }
+
+        return;
     }
 
     function void drawRectangle(int x1, int y1, int x2, int y2) {
