@@ -47,14 +47,14 @@ class String {
     }
 
     function char newLine() {
-        // TODO
+        return 10;
     }
 
     function char backSpace() {
-        // TODO
+        return 8;
     }
 
     function char doubleQuote() {
-        // TODO
+        return 34;
     }
 }
