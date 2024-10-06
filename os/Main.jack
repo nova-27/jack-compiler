@@ -4,6 +4,8 @@ class Main {
 
         let s = "Hello, World!";
         do s.setCharAt(1, s.charAt(1) + 1);
+        do s.eraseLastChar();
+        do s.appendChar(10);
         do s.dispose();
         return;
     }

@@ -34,7 +34,8 @@ class String {
     }
 
     method void eraseLastChar() {
-        // TODO
+        let len = len - 1;
+        return;
     }
 
     method int intValue() {
