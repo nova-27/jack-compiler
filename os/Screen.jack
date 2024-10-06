@@ -7,7 +7,15 @@ class Screen {
     }
 
     function void clearScreen() {
-        // TODO
+        var int address;
+
+        let address = 16384;
+        while (address < 24576) {
+            do Memory.poke(address, _b);
+            let address = address + 1;
+        }
+
+        return;
     }
 
     function void setColor(boolean b) {

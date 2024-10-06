@@ -2,11 +2,9 @@ class Main {
     function void main() {
         var Array v;
         do Screen.setColor(true);
-        do Screen.drawPixel(0, 0);
-        do Screen.drawPixel(1, 1);
-        do Screen.drawPixel(2, 2);
+        do Screen.clearScreen();
         do Screen.setColor(false);
-        do Screen.drawPixel(1, 1);
+        do Screen.drawPixel(3, 3);        
         return;
     }
 }
