@@ -1,11 +1,9 @@
 class Main {
     function void main() {
-        var Array v;
-        do Screen.setColor(true);
-        do Screen.clearScreen();
-        do Screen.setColor(false);
-        do Screen.drawCircle(30, 50, 20);
-        do Screen.drawRectangle(60, 10, 100, 30);
+        var String s;
+
+        let s = "Hello, World!";
+        do s.dispose();
         return;
     }
 }

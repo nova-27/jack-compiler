@@ -1,0 +1,58 @@
+class String {
+    field Array chars;
+    field int len;
+
+    constructor String new(int maxLength) {
+        let chars = Array.new(maxLength);
+        let len = 0;
+        return this;
+    }
+
+    method void dispose() {
+        do chars.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method int length() {
+        return len;
+    }
+
+    method char charAt(int j) {
+        // TODO
+    }
+
+    method void setCharAt(int j, char c) {
+        // TODO
+    }
+
+    method String appendChar(char c) {
+        let chars[len] = c;
+        let len = len + 1;
+        return this;
+    }
+
+    method void eraseLastChar() {
+        // TODO
+    }
+
+    method int intValue() {
+        // TODO
+    }
+
+    method void setInt(int val) {
+        // TODO
+    }
+
+    function char newLine() {
+        // TODO
+    }
+
+    function char backSpace() {
+        // TODO
+    }
+
+    function char doubleQuote() {
+        // TODO
+    }
+}
