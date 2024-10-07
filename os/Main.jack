@@ -1,14 +1,11 @@
 class Main {
     function void main() {
-        var String s;
-        var Array v;
+        do Output.printChar(48);
+        do Output.printChar(49);
+        do Output.printChar(50);
+        do Output.printChar(51);
+        do Output.printChar(52);
 
-        let s = String.new(10);
-        let v = Array.new(1);
-
-        do s.setInt(-6725);
-        let v[0] = s.intValue();
-        
         return;
     }
 }
