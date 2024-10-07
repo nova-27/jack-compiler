@@ -88,6 +88,11 @@ class Math {
         }
     }
 
+    function int naturalRemainder(int x, int y) {
+        do Math.naturalDivide(x, y);
+        return x - divisionTemp;
+    }
+
     function int min(int x, int y) {
         if (x > y) {
             return y;

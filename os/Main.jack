@@ -1,12 +1,14 @@
 class Main {
     function void main() {
         var String s;
+        var Array v;
 
-        let s = "Hello, World!";
-        do s.setCharAt(1, s.charAt(1) + 1);
-        do s.eraseLastChar();
-        do s.appendChar(10);
-        do s.dispose();
+        let s = String.new(10);
+        let v = Array.new(1);
+
+        do s.setInt(-6725);
+        let v[0] = s.intValue();
+        
         return;
     }
 }

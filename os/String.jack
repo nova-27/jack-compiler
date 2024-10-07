@@ -39,11 +39,51 @@ class String {
     }
 
     method int intValue() {
-        // TODO
+        var int val, i;
+        var boolean isMinus;
+
+        if (chars[0] = 45) {
+            let isMinus = true;
+            let i = 1;
+        }
+
+        while (i < len) {
+            let val = val * 10 + chars[i] - 48;
+            let i = i + 1;
+        }
+
+        if (isMinus) {
+            let val = -val;
+        }
+
+        return val;
     }
 
     method void setInt(int val) {
-        // TODO
+        if (Math.bit(val, 15)) {
+            // minus
+            do appendChar(45);
+            let val = -val;
+        }
+
+        do setNaturalInt(val);
+
+        return;
+    }
+
+    method void setNaturalInt(int val) {
+        var int lastDigit;
+
+        let lastDigit = Math.naturalRemainder(val, 10) + 48;
+
+        if (val < 10) {
+            do appendChar(lastDigit);
+        } else {
+            do setInt(val / 10);
+            do appendChar(lastDigit);
+        }
+
+        return;
     }
 
     function char newLine() {
