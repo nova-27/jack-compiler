@@ -229,6 +229,14 @@ class Output {
     /** Displays the given integer starting at the cursor location,
      *  and advances the cursor appropriately. */
     function void printInt(int i) {
+        var String text;
+
+        let text = String.new(6);
+        do text.setInt(i);
+        do Output.printString(text);
+        do text.dispose();
+
+        return;
     }
 
     /** Advances the cursor to the beginning of the next line. */

@@ -1,9 +1,6 @@
 class Main {
     function void main() {
-        var String text;
-
-        let text = "Hello, World!";
-        do Output.printString(text);
+        do Output.printInt(-17491);
 
         return;
     }
