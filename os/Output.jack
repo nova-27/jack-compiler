@@ -215,6 +215,15 @@ class Output {
     /** displays the given string starting at the cursor location,
      *  and advances the cursor appropriately. */
     function void printString(String s) {
+        var int length, i;
+
+        let length = s.length();
+        while (i < length) {
+            do Output.printChar(s.charAt(i));
+            let i = i + 1;
+        }
+
+        return;
     }
 
     /** Displays the given integer starting at the cursor location,

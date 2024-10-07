@@ -1,10 +1,9 @@
 class Main {
     function void main() {
-        do Output.printChar(48);
-        do Output.printChar(49);
-        do Output.printChar(50);
-        do Output.printChar(51);
-        do Output.printChar(52);
+        var String text;
+
+        let text = "Hello, World!";
+        do Output.printString(text);
 
         return;
     }
