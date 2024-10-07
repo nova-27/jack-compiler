@@ -1,6 +1,9 @@
 class Main {
     function void main() {
         do Output.printInt(-17491);
+        do Output.println();
+        do Output.printString("This is test!");
+        do Output.backSpace();
 
         return;
     }
