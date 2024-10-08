@@ -94,7 +94,7 @@ class Math {
     function int naturalDivide(int x, int y) {
         var int q;
 
-        if (x < y) {
+        if ((x < y) | ~(y > 0)) {
             let divisionTemp = 0;
             return 0;
         }
