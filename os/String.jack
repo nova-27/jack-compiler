@@ -82,6 +82,8 @@ class String {
 
     /** Sets this string to hold a representation of the given value. */
     method void setInt(int val) {
+        let len = 0;
+
         if (Math.bit(val, 15)) {
             // minus
             do appendChar(45);
@@ -101,7 +103,7 @@ class String {
         if (val < 10) {
             do appendChar(lastDigit);
         } else {
-            do setInt(val / 10);
+            do setNaturalInt(val / 10);
             do appendChar(lastDigit);
         }
 
@@ -110,12 +112,12 @@ class String {
 
     /** Returns the new line character. */
     function char newLine() {
-        return 10;
+        return 128;
     }
 
     /** Returns the backspace character. */
     function char backSpace() {
-        return 8;
+        return 129;
     }
 
     /** Returns the double quote (") character. */
