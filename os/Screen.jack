@@ -13,7 +13,7 @@ class Screen {
 
     /** Initializes the Screen. */
     function void init() {
-        let _b = false;
+        let _b = true;
         return;
     }
 
@@ -80,6 +80,15 @@ class Screen {
             let dy = Math.abs(dy);
         }
 
+        if (dx = 0) {
+            // when vertical line
+            let adyMinusbdx = 1;
+        }
+        if (dy = 0) {
+            // when horizontal line
+            let adyMinusbdx = -1;
+        }
+
         while ((a - 1 < dx) & (b - 1 < dy)) {
             if (neg) {
                 do Screen.drawPixel(x1 + a, y1 - b);
@@ -87,10 +96,11 @@ class Screen {
                 do Screen.drawPixel(x1 + a, y1 + b);
             }
 
-            if (adyMinusbdx > 0) {
+            if (~(adyMinusbdx < 0)) {
                 let b = b + 1;
                 let adyMinusbdx = adyMinusbdx - dx;
-            } else {
+            }
+            if (~(adyMinusbdx > 0)) {
                 let a = a + 1;
                 let adyMinusbdx = adyMinusbdx + dy;
             }
