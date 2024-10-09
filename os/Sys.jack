@@ -27,12 +27,19 @@ class Sys {
     /** Displays the given error code in the form "ERR<errorCode>",
      *  and halts the program's execution. */
     function void error(int errorCode) {
-        // TODO
+        do Output.printString("ERR");
+        do Output.printInt(errorCode);
         do Sys.halt();
     }
 
     /** Waits approximately duration milliseconds and returns.  */
     function void wait(int duration) {
-        // TODO
+        let duration = duration * 10;
+
+        while (duration > 0) {
+            let duration = duration - 1;
+        }
+
+        return;
     }
 }
