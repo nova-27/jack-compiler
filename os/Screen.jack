@@ -23,7 +23,7 @@ class Screen {
 
         let address = 16384;
         while (address < 24576) {
-            do Memory.poke(address, _b);
+            do Memory.poke(address, 0);
             let address = address + 1;
         }
 
